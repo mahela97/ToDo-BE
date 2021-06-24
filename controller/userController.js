@@ -52,19 +52,19 @@ module.exports={
                         expiresIn: "1day",
                     });
                     const {_id,name,email,password,createdAt} = user
-                    return res.json({
+                    return res.status(200).json({
                         sucess: 1,
                         message: "login Sucess",
                         token: jsontoken,
                         user:{_id,name,email,password,createdAt}
                     });
                 } else {
-                    return res.json({
+                    return res.status(401).json({
                         message: "Password is invalid",
                     });
                 }
             } else {
-                return res.json({
+                return res.status(401).json({
                     message: "Invalid Email",
                 });
             }
