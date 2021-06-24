@@ -51,11 +51,12 @@ module.exports={
                     const jsontoken = sign({ result: user }, "secret", {
                         expiresIn: "1day",
                     });
+                    const {_id,name,email,password,createdAt} = user
                     return res.json({
                         sucess: 1,
                         message: "login Sucess",
                         token: jsontoken,
-                        user:user
+                        user:{_id,name,email,password,createdAt}
                     });
                 } else {
                     return res.json({
