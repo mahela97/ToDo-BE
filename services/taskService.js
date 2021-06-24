@@ -9,7 +9,7 @@ module.exports = {
     getAllTasks:async(query)=>{
         let filter = {};
         if (query) {
-            filter = { title: { $regex: query, $options: "i" } };
+            filter = { title: { $regex: query, $options: "i" } ,archived:false};
         }
        const result = await Task.find(filter).sort("createdAt").populate("user");
         return result;

@@ -6,6 +6,7 @@ module.exports ={
         const schema = Joi.object({
             title:Joi.string().required().max(20).min(2),
             description:Joi.string().required(),
+            archived:Joi.boolean().default(false)
         });
         const validation = schema.validate(req.body);
         if(validation.error){
@@ -16,7 +17,7 @@ module.exports ={
         data.user = req.user._id;
         try{
             await saveTask(data);
-            res.status(201).send({message:"Success"});
+            res.status(201).send({message:"Card added successfully"});
         }catch(error){
             console.log(error);
             res.status(error.code||404).send({message:error.message});

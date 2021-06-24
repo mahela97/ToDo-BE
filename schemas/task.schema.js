@@ -16,6 +16,9 @@ const taskSchema = new mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: DBUtil.USER,
     },
+    archived:{
+        type:Boolean
+    }
 
 },{timestamps:true});
 

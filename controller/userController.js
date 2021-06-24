@@ -10,7 +10,8 @@ module.exports={
         const schema = Joi.object({
             name:Joi.string().required(),
             email:Joi.string().email().required(),
-            password:Joi.string().min(6).max(25).required()
+            password:Joi.string().min(6).max(25).required(),
+            type:Joi.string().default("user")
         });
         const validation = schema.validate(req.body);
         if(validation.error){
@@ -18,11 +19,13 @@ module.exports={
             return;
         }
         const data = validation.value;
-        data.type = "user";
         const salt = genSaltSync(10);
         data.password = hashSync(data.password, salt);
         try{
             const result = await saveUser(data);
+            if (result.password){
+                delete result.password;
+            }
             res.status(201).send({result});
         }
         catch(error){
