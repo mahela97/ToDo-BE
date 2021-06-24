@@ -11,12 +11,12 @@ const taskSchema = new mongoose.Schema({
         type: String,
         required: true,
         max: 255,
-        unique:true
     },
     user: {
         type: mongoose.Types.ObjectId,
         ref: DBUtil.USER,
     },
+
 },{timestamps:true});
 
 module.exports = mongoose.model(DBUtil.TASK, taskSchema);

@@ -2,7 +2,7 @@ const Joi = require("joi");
 const {saveTask} = require("../services/taskService")
 
 module.exports ={
-    craeteTask:async(req,res)=>{
+    createTask:async(req,res)=>{
         const schema = Joi.object({
             title:Joi.string().required().max(20).min(2),
             description:Joi.string().required(),
@@ -18,7 +18,8 @@ module.exports ={
             const task = await saveTask(data);
             res.status(201).send({message:"Success"});
         }catch(error){
-            res.status(error.code).send(error.message);
+            console.log(error);
+            res.status(error.code||404).send(error.message);
         }
 
     }
