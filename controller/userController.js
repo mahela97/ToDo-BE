@@ -14,7 +14,7 @@ module.exports={
         });
         const validation = schema.validate(req.body);
         if(validation.error){
-            res.status(401).send(validation.error.message);
+            res.status(401).send({message:validation.error.message});
             return;
         }
         const data = validation.value;
@@ -26,7 +26,7 @@ module.exports={
             res.status(201).send({result});
         }
         catch(error){
-            res.status(error.code||409).send(error.message);
+            res.status(error.code||409).send({message:error.message});
         }
 
     },
@@ -37,7 +37,7 @@ module.exports={
         });
         const validation = schema.validate(req.body);
         if(validation.error){
-            res.status(401).send(validation.error.message);
+            res.status(401).send({message:validation.error.message});
             return;
         }
         const body = validation.value;
@@ -70,7 +70,7 @@ module.exports={
                 });
             }
         } catch (error) {
-            res.status(error.code).send(error.message);
+            res.status(error.code).send({message:error.message});
         }
     }
 

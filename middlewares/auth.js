@@ -7,14 +7,14 @@ module.exports = {
             token = token.slice(7);
             verify(token, "secret", (error, decoded) => {
                 if (error) {
-                    res.status(error.code).send(error.message);
+                    res.status(error.code).send({message:error.message});
                 } else {
                     req.user = decoded.result;
                     next();
                 }
             });
         } else {
-            res.status(403).send("Access denied ! No token");
+            res.status(403).send({message:"Access denied ! No token"});
         }
     }
 };

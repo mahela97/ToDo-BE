@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const {saveTask} = require("../services/taskService")
+const {saveTask,getAllTasks} = require("../services/taskService")
 
 module.exports ={
     createTask:async(req,res)=>{
@@ -9,18 +9,27 @@ module.exports ={
         });
         const validation = schema.validate(req.body);
         if(validation.error){
-            res.status(401).send(validation.error.message);
+            res.status(401).send({message:validation.error.message});
             return;
         }
         const data = validation.value;
         data.user = req.user._id;
         try{
-            const task = await saveTask(data);
+            await saveTask(data);
             res.status(201).send({message:"Success"});
         }catch(error){
             console.log(error);
-            res.status(error.code||404).send(error.message);
+            res.status(error.code||404).send({message:error.message});
         }
 
+    },
+    getAllTasks:async(req,res)=>{
+        try{
+            const query = req.query.name;
+            const tasks = await getAllTasks(query);
+            res.status(201).send(tasks);
+        }catch(error){
+            res.status(error.code).send(error.message);
+        }
     }
 }
