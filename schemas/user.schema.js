@@ -18,6 +18,10 @@ const userSchema = new mongoose.Schema({
         max: 1024,
         min: 6,
     },
+    type:{
+        type:String,
+        required:true,
+    }
 },{timestamps:true});
 
 module.exports = mongoose.model("User", userSchema);

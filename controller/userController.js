@@ -18,6 +18,7 @@ module.exports={
             return;
         }
         const data = validation.value;
+        data.type = "user";
         const salt = genSaltSync(10);
         data.password = hashSync(data.password, salt);
         try{
@@ -51,20 +52,20 @@ module.exports={
                     const jsontoken = sign({ result: user }, "secret", {
                         expiresIn: "1day",
                     });
-                    const {_id,name,email,password,createdAt} = user
+                    const {_id,name,email,password,createdAt,type} = user
                     return res.status(200).json({
                         sucess: 1,
                         message: "login Sucess",
                         token: jsontoken,
-                        user:{_id,name,email,password,createdAt}
+                        user:{_id,name,email,password,createdAt,type}
                     });
                 } else {
-                    return res.status(401).json({
+                    return res.status(403).json({
                         message: "Password is invalid",
                     });
                 }
             } else {
-                return res.status(401).json({
+                return res.status(404).json({
                     message: "Invalid Email",
                 });
             }
