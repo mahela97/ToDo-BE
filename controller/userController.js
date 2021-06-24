@@ -74,6 +74,7 @@ module.exports={
         }
     },
     getCurrentUser:async(req,res)=>{
+        const {} = req.user;
         res.status(201).send(req.user);
     }
 

@@ -10,6 +10,7 @@ module.exports = {
                     res.status(error.code).send({message:error.message});
                 } else {
                     req.user = decoded.result;
+                    delete req.user.password
                     next();
                 }
             });

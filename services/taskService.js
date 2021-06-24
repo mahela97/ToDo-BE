@@ -8,6 +8,12 @@ module.exports = {
     },
     getAllTasks:async(query)=>{
 
-        const result = await Task.find({$regex:{}})
+        let filter = {};
+        if (query) {
+            filter = { name: { $regex: query, $options: "i" } };
+        }
+
+       const result = await Task.find(filter).sort("createdAt");
+        return result;
     }
 }
