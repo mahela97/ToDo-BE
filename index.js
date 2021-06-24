@@ -25,3 +25,5 @@ mongoose.connect(
 app.use("/api",require("./routes/mainRoutes") );
 
 app.listen(PORT, () => console.log("Server is running"))
+
+module.exports = app
