@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const {saveTask,getAllTasks} = require("../services/taskService")
+const {saveTask,getAllTasks,updateTask} = require("../services/taskService")
 
 module.exports ={
     createTask:async(req,res)=>{
@@ -36,5 +36,26 @@ module.exports ={
         }catch(error){
             res.status(error.code).send(error.message);
         }
+    },
+    editTask:async(req,res)=>{
+        const schema = Joi.object({
+            id:Joi.string().required(),
+        });
+        const validation = schema.validate(req.params);
+        if(validation.error){
+            res.status(401).send({message:validation.error.message});
+            return;
+        }
+        const {id} = validation.value;
+        const body = req.body;
+
+            try{
+                await updateTask(id,body);
+                res.status(201).send({message:"Successfully updated"});
+            }catch(error){
+                res.status(error.status||404).send({message:error.message});
+            }
+
+
     }
 }

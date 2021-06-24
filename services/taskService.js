@@ -13,5 +13,8 @@ module.exports = {
         }
        const result = await Task.find(filter).sort("createdAt").populate("user");
         return result;
+    },
+    updateTask:async(id,data)=>{
+       await Task.findByIdAndUpdate(id,data);
     }
 }
