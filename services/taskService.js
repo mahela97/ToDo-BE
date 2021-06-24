@@ -7,13 +7,11 @@ module.exports = {
         return result;
     },
     getAllTasks:async(query)=>{
-
         let filter = {};
         if (query) {
-            filter = { name: { $regex: query, $options: "i" } };
+            filter = { title: { $regex: query, $options: "i" } };
         }
-
-       const result = await Task.find(filter).sort("createdAt");
+       const result = await Task.find(filter).sort("createdAt").populate("user");
         return result;
     }
 }

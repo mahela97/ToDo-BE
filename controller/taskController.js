@@ -25,7 +25,7 @@ module.exports ={
     },
     getAllTasks:async(req,res)=>{
         try{
-            const query = req.query.name;
+            const query = req.query.title;
             const tasks = await getAllTasks(query);
             res.status(201).send(tasks);
         }catch(error){
