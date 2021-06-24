@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const {saveTask,getAllTasks,updateTask} = require("../services/taskService")
+const {saveTask,getAllTasks,updateTask,deleteTask} = require("../services/taskService")
 
 module.exports ={
     createTask:async(req,res)=>{
@@ -56,6 +56,25 @@ module.exports ={
                 res.status(error.status||404).send({message:error.message});
             }
 
+
+    },
+    deleteTask:async(req,res)=>{
+        const schema = Joi.object({
+            id:Joi.string().required(),
+        });
+        const validation = schema.validate(req.params);
+        if(validation.error){
+            res.status(401).send({message:validation.error.message});
+            return;
+        }
+        const {id} = validation.value;
+
+        try{
+            await deleteTask(id);
+            res.status(201).send({message:"Successfully deleted"});
+        }catch(error){
+            res.status(error.status||404).send({message:error.message});
+        }
 
     }
 }

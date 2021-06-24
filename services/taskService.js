@@ -16,5 +16,8 @@ module.exports = {
     },
     updateTask:async(id,data)=>{
        await Task.findByIdAndUpdate(id,data);
+    },
+    deleteTask:async(id)=>{
+        await Task.findByIdAndDelete(id);
     }
 }
