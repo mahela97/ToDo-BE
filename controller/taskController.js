@@ -27,7 +27,11 @@ module.exports ={
         try{
             const query = req.query.title;
             const tasks = await getAllTasks(query);
-            res.status(201).send(tasks);
+            const updatedTasks = tasks.map((task)=>{
+                task.user.password = undefined;
+                return task;
+            });
+            res.status(201).send(updatedTasks);
         }catch(error){
             res.status(error.code).send(error.message);
         }
