@@ -15,9 +15,11 @@ module.exports = {
         return result;
     },
     updateTask:async(id,data)=>{
-       await Task.findByIdAndUpdate(id,data);
+       const result = await Task.findByIdAndUpdate(id,data);
+       return result;
     },
     deleteTask:async(id)=>{
-        await Task.findByIdAndDelete(id);
+        const result = await Task.findByIdAndDelete(id);
+        return result;
     }
 }

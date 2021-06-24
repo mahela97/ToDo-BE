@@ -23,9 +23,7 @@ module.exports={
         data.password = hashSync(data.password, salt);
         try{
             const result = await saveUser(data);
-            if (result.password){
-                delete result.password;
-            }
+            result.password = undefined;
             res.status(201).send({result});
         }
         catch(error){

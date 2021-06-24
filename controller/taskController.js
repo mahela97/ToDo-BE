@@ -16,8 +16,8 @@ module.exports ={
         const data = validation.value;
         data.user = req.user._id;
         try{
-            await saveTask(data);
-            res.status(201).send({message:"Card added successfully"});
+            const result = await saveTask(data);
+            res.status(201).send({message:"Task added successfully",id:result._id});
         }catch(error){
             console.log(error);
             res.status(error.code||404).send({message:error.message});
@@ -49,9 +49,15 @@ module.exports ={
         const {id} = validation.value;
         const body = req.body;
 
+
             try{
-                await updateTask(id,body);
-                res.status(201).send({message:"Successfully updated"});
+                const result = await updateTask(id,body);
+                if (result){res.status(201).send({message:"Successfully updated"});}
+                else{
+                    res.status(401).send({message:"Task not exist"})
+                }
+
+
             }catch(error){
                 res.status(error.status||404).send({message:error.message});
             }
@@ -70,8 +76,11 @@ module.exports ={
         const {id} = validation.value;
 
         try{
-            await deleteTask(id);
-            res.status(201).send({message:"Successfully deleted"});
+            const result= await deleteTask(id);
+            if (result){ res.status(201).send({message:"Successfully deleted"});}
+            else{
+                res.status(401).send({message:"Task not exist"})
+            }
         }catch(error){
             res.status(error.status||404).send({message:error.message});
         }
