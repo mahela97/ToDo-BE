@@ -14,5 +14,5 @@ module.exports={
     getUserByEmail:async(email)=>{
         const user =await User.findOne({email});
         return user;
-    }
+    },
 }
