@@ -1,7 +1,7 @@
 const { genSaltSync, hashSync, compareSync } = require("bcrypt");
 const { sign } = require("jsonwebtoken");
-const {saveUser} = require("../services/userService");
 const Joi = require("joi");
+const {saveUser} = require("../services/userService")
 
 
 
@@ -15,6 +15,7 @@ module.exports={
         const validation = schema.validate(req.body);
         if(validation.error){
             res.status(401).send(validation.error.message);
+            return;
         }
         const data = validation.value;
         const salt = genSaltSync(10);
@@ -24,7 +25,7 @@ module.exports={
             res.status(201).send({result});
         }
         catch(error){
-            res.status(error.code).send(error.message);
+            res.status(error.code||409).send(error.message);
         }
 
     }
