@@ -1,7 +1,7 @@
 const { genSaltSync, hashSync, compareSync } = require("bcrypt");
 const { sign } = require("jsonwebtoken");
 const Joi = require("joi");
-const {saveUser} = require("../services/userService")
+const {saveUser,getUserByEmail} = require("../services/userService")
 
 
 
@@ -30,44 +30,45 @@ module.exports={
 
     },
     loginUser:async(req,res)=>{
-        const body = req.body;
-        let userDetailsinDatabase;
+        const schema = Joi.object({
+            email:Joi.string().email().required(),
+            password:Joi.string().min(6).max(25).required()
+        });
+        const validation = schema.validate(req.body);
+        if(validation.error){
+            res.status(401).send(validation.error.message);
+            return;
+        }
+        const body = validation.value;
         try {
-            userDetailsinDatabase = await getRegistedUserByEmail(body.email);
-            if (userDetailsinDatabase && !userDetailsinDatabase.isDelete) {
+            const user = await getUserByEmail(body.email);
+            if (user) {
                 const result = compareSync(
                     body.password,
-                    userDetailsinDatabase.password
+                    user.password
                 );
                 if (result) {
-                    userDetailsinDatabase.password = undefined;
-                    userDetailsinDatabase.user_photo = undefined;
-                    userDetailsinDatabase.userType= "User"
-                    const jsontoken = sign({ result: userDetailsinDatabase }, "qwe1234", {
+                    const jsontoken = sign({ result: user }, "secret", {
                         expiresIn: "1day",
                     });
                     return res.json({
                         sucess: 1,
                         message: "login Sucess",
                         token: jsontoken,
+                        user:user
                     });
                 } else {
                     return res.json({
-                        sucess: 0,
                         message: "Password is invalid",
                     });
                 }
             } else {
                 return res.json({
-                    sucess: 0,
                     message: "Invalid Email",
                 });
             }
-        } catch (err) {
-            return res.json({
-                sucess: 0,
-                message: err,
-            });
+        } catch (error) {
+            res.status(error.code).send(error.message);
         }
     }
 

@@ -10,5 +10,9 @@ module.exports={
             }
             const result = await user.save();
             return result;
+    },
+    getUserByEmail:async(email)=>{
+        const user =await User.findOne({email});
+        return user;
     }
 }
