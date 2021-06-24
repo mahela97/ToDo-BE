@@ -72,6 +72,9 @@ module.exports={
         } catch (error) {
             res.status(error.code).send({message:error.message});
         }
+    },
+    getCurrentUser:async(req,res)=>{
+        res.status(201).send(req.user);
     }
 
 }
