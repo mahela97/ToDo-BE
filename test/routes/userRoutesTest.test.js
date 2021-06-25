@@ -25,7 +25,7 @@ const server = require('../../index.js')
      })
      describe("POST /api/user/login",()=>{
          it("It should login user",(done)=>{
-             const user={email:"mahela@gmail.com",password:"123456"}
+             const user={email:"testuser@gmail.com",password:"123456"}
              chai.request(server)
                 .post('/api/user/login')
                 .send(user)
@@ -39,6 +39,42 @@ const server = require('../../index.js')
                     done()
                 })
          })
+         it("It should give invalid email error",(done)=>{
+            const user={email:"invalidemail@gmail.com", password:"123456"}
+            chai.request(server)
+               .post('/api/user/login')
+               .send(user)
+               .end((err,res)=>{
+                res.should.have.status(404);
+                res.body.should.have.a('object');
+                res.body.should.have.property('message').eq("Invalid Email");
+                done()
+               })
+        })
+        it("It should give invalid password error",(done)=>{
+            const user={email:"testuser@gmail.com",password:"invalid Password"}
+            chai.request(server)
+               .post('/api/user/login')
+               .send(user)
+               .end((err,res)=>{
+                res.should.have.status(403);
+                res.body.should.have.a('object');
+                res.body.should.have.property('message').eq("Password is invalid");
+                done()
+               })
+        })
+        it("It should give email is required",(done)=>{
+            const user={password:"invalid Password"}
+            chai.request(server)
+               .post('/api/user/login')
+               .send(user)
+               .end((err,res)=>{
+                res.should.have.status(401);
+                res.body.should.have.a('object');
+                res.body.should.have.property('message').eq("\"email\" is required");
+                done()
+               })
+        })
      })
 
      describe("POST /api/user/register",()=>{
@@ -52,6 +88,18 @@ const server = require('../../index.js')
                    res.body.should.have.a('object');
                    res.body.should.have.property('result');
                    done()
+               })
+        })
+        it("Email validation error should occur",(done)=>{
+            const user={email:"invalidEmailFormat",password:"123456",name:"Mahela"}
+            chai.request(server)
+               .post('/api/user/register')
+               .send(user)
+               .end((err,res)=>{
+                    res.should.have.status(401);
+                    res.body.should.have.a('object');
+                    res.body.should.have.property('message').eq("\"email\" must be a valid email");
+                    done()
                })
         })
         after(async()=>{
