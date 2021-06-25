@@ -73,6 +73,23 @@ describe("Task Route Tests",()=>{
             await Task.findByIdAndDelete(id);
         })
     })
+
+    describe("GET /api/task/getAllTasks",()=>{
+
+        it("It should return all the tasks",(done)=>{
+            chai.request(server)
+                .get('/api/task/getAllTasks')
+                .set({ "Authorization": `Bearer ${token}` })
+                .end((err,res)=>{
+                    res.should.have.status(201);
+                    res.body.should.have.a('array');
+                   // res.body.should.have.contains('object');
+                    done()
+                })
+        })
+    })
+
+
     describe("PATCH /api/task/editTask",()=>{
         let id;
         before((done)=>{
