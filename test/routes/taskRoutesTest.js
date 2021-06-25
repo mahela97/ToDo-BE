@@ -1,4 +1,5 @@
 const Task = require('../../schemas/task.schema');
+const User = require('../../schemas/user.schema');
 const mongoose = require("mongoose");
 
 const chai = require ('chai')
@@ -10,7 +11,8 @@ const server = require('../../index.js')
 describe("Task Route Tests",()=>{
     let token;
     let currentUser;
-    before(done=>{
+    let result;
+    before(  done=>{
         mongoose.connect(
             process.env.DB_CONNECT,
             { useNewUrlParser: true, useUnifiedTopology: true },
@@ -20,19 +22,31 @@ describe("Task Route Tests",()=>{
                     done(err)
                 } else {
                     console.log("Succesfully connected to database");
+
                 }
             }
         );
-        const user={email:"testuser@gmail.com",password:"123456"}
-            chai.request(server)
-                .post('/api/user/login')
-                .send(user)
+            const testUser = {name:"TestUser",email:"testuser@gmail.com",password:"123456"};
+             chai.request(server)
+                .post('/api/user/register')
+                .send(testUser)
                 .end((err,res)=>{
-                    res.should.have.status(200);
-                    token=res.body.token
-                    currentUser = res.body.user;
-                    done()
+                    result = res.body;
+                    const user={email:"testuser@gmail.com",password:"123456"}
+                    chai.request(server)
+                        .post('/api/user/login')
+                        .send(user)
+                        .end((err,res)=>{
+                            res.should.have.status(200);
+                            token=res.body.token
+                            currentUser = res.body.user;
+                            done();
+                        })
                 })
+
+
+
+
     })
     describe("POST /api/task/addTask",()=>{
         let id;
@@ -200,5 +214,9 @@ describe("Task Route Tests",()=>{
                     done()
                 })
         })
+    })
+
+    after(async()=>{
+        await User.findOneAndDelete({email:"testuser@gmail.com"});
     })
 })

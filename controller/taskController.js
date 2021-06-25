@@ -19,7 +19,6 @@ module.exports ={
             const result = await saveTask(data);
             res.status(201).send({message:"Task added successfully",id:result._id});
         }catch(error){
-            console.log(error);
             res.status(error.code||404).send({message:error.message});
         }
 

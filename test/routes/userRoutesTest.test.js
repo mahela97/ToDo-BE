@@ -8,20 +8,28 @@ chai.use(chaiHttp);
 const server = require('../../index.js')
 
  describe("User Tests",()=>{
-     before(done=>{
+     let result;
+     before( done=>{
         mongoose.connect(
             process.env.DB_CONNECT,
             { useNewUrlParser: true, useUnifiedTopology: true },
             (err) => {
                 if (err) {
-                    console.log(err);
                     done(err)
                 } else {
-                    done()
                     console.log("Succesfully connected to database");
+                    const testUser ={name:"TestUser",email:"testuser@gmail.com",password:"123456"};
+                    chai.request(server)
+                        .post('/api/user/register')
+                        .send(testUser)
+                        .end((err,res)=>{
+                            result = res.body;
+                            done()
+                        })
                 }
             }
         );
+
      })
      describe("POST /api/user/login",()=>{
          it("It should login user",(done)=>{
@@ -130,4 +138,7 @@ const server = require('../../index.js')
                })
         })
     })
+     after(async()=>{
+         await User.findOneAndDelete({email:"testuser@gmail.com"});
+     })
  })
